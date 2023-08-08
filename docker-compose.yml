@@ -4,8 +4,7 @@ services:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/usr/src/app/django_app
-      - .:/code
+      - ./django_app:/usr/src/app/django_app  # Adjust the source path
     ports:
       - "8000:8000"
     depends_on:
@@ -13,6 +12,8 @@ services:
     environment:
       - DEBUG=True
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - my_network  # Assign the Django service to the same network as elasticsearch
 
   elasticsearch:
     image: elasticsearch:7.8.1
@@ -20,3 +21,8 @@ services:
       - discovery.type=single-node
     ports:
         - "9200:9200"
+    networks:
+      - my_network  # Assign the Elasticsearch service to the same network as django
+
+networks:
+  my_network:

@@ -8,6 +8,7 @@ media
 identifier.sqlite
 celerybeat-schedule
 db.json
+pyvenv.cfg
 
 # Backup files #
 *.bak

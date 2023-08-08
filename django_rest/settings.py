@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'localhost:9200',  # Adjust host and port as needed
+        'hosts': 'elasticsearch:9200',  # Check if this matches your Elasticsearch service name
     },
 }
 
