@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'base',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
 ]
 
 ELASTICSEARCH_DSL = {
@@ -90,6 +92,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_rest.urls'
+
 
 TEMPLATES = [
     {
