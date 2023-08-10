@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create/Edit Blog Post</title>
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
+</head>
+<body>
+    <h1>Create</h1>
+    <form method="post">
+    {% csrf_token %}
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" required><br>
+    <label for="content">Content:</label><br>
+    <textarea name="content" id="content" rows="4" cols="50" required></textarea><br>
+    <button type="submit">Create Post</button>
+</form>
+
+<script>
+    CKEDITOR.replace('content');
+</script>
+
+</body>
+</html>

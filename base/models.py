@@ -1,8 +1,12 @@
 from django.db import models
-
+from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 
 # Create your models here.
+
+
+from django.contrib.auth.models import AbstractUser
+
 
 
 
@@ -33,6 +37,6 @@ class Book(models.Model):
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    content = RichTextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField(auto_now_add=True)
