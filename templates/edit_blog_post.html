@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create/Edit Blog Post</title>
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
+</head>
+<body>
+    <h1>Edit</h1>
 <form method="post">
     {% csrf_token %}
     <label for="title">Title:</label>
@@ -6,3 +16,10 @@
     <textarea name="content" id="content" rows="4" cols="50" required>{{ blog_post.content }}</textarea><br>
     <button type="submit">Save</button>
 </form>
+
+<script>
+    CKEDITOR.replace('content');
+</script>
+
+</body>
+</html>
