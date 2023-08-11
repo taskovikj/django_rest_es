@@ -17,12 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from base import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('api.urls')),
     path('blog-post/create/', views.create_blog_post_view, name='create_blog_post'),
-    path('blog-post/list/', views.list_blog_posts_view, name='list_blog_posts'),
     path('blog-post/edit/<int:post_id>/', views.edit_blog_post_view, name='edit_blog_post'),
-
+    path('register/', views.register_view, name='register'),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("index/", views.index, name="index"),
+    path('user/',include('user.urls')),
+    path('blog/<int:blog_id>/', views.blog_detail_view, name='blog_detail'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

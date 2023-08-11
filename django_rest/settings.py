@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Application definition
 
@@ -52,6 +55,7 @@ ELASTICSEARCH_DSL = {
         'hosts': 'elasticsearch:9200',  # Check if this matches your Elasticsearch service name
     },
 }
+AUTH_USER_MODEL = 'base.CustomUser'
 
 # if not DEBUG:
 #     # Production Database configuration
@@ -128,6 +132,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
 
 
 # Password validation

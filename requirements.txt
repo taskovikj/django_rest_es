@@ -4,3 +4,5 @@ elasticsearch-dsl==7.4.0
 django_elasticsearch_dsl
 django_elasticsearch_dsl_drf
 django-ckeditor
+psycopg2-binary==2.9.6
+pillow

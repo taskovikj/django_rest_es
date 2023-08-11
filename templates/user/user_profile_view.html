@@ -1,0 +1,34 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h2>User Profile</h2>
+
+        <h3>{{ user.username }}</h3>
+        <p>Email: {{ user.email }}</p>
+        <p>Status: {{ user.status }}</p>
+        <p>Bio: {{ user.bio }}</p>
+
+        <h3>Your Articles</h3>
+        <ul>
+            {% for post in blog_posts %}
+                <li>{{ post.title }}</li>
+            {% empty %}
+                <li>No articles yet.</li>
+            {% endfor %}
+        </ul>
+         {% if user != request.user %}
+        <form method="post">
+            {% csrf_token %}
+            {% if user in request.user.following.all %}
+                <button type="submit" name="action" value="unfollow" class="btn btn-danger">Unfollow</button>
+            {% else %}
+                <button type="submit" name="action" value="follow" class="btn btn-primary">Follow</button>
+            {% endif %}
+        </form>
+    {% endif %}
+
+    </div>
+{% endblock %}

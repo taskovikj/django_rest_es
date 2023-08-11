@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create/Edit Blog Post</title>
-<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 
-</head>
-<body>
     <h1>Create</h1>
     <form method="post">
     {% csrf_token %}
@@ -17,9 +9,5 @@
     <button type="submit">Create Post</button>
 </form>
 
-<script>
-    CKEDITOR.replace('content');
-</script>
 
-</body>
-</html>
+

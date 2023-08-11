@@ -13,5 +13,16 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
+
+
 # Copy the rest of the application code into the container
 COPY . /app/
+
+
+COPY entrypoint.sh /entrypoint.sh
+
+# Grant execute permissions to the entrypoint script
+RUN chmod +x /entrypoint.sh
+
+# Set the entrypoint for the container
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,10 +1,19 @@
 from django import forms
-from .models import BlogPost
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 
-class BlogPostForm(forms.ModelForm):
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    profile_photo = forms.ImageField(required=False)  # Add the profile_photo field
+
     class Meta:
-        model = BlogPost
-        fields = ['title', 'content']
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2', 'bio', 'profile_photo')
 
-    content = forms.CharField(widget=CKEditorUploadingWidget())
+
+
+
+class CustomUserInforForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'status', 'bio']

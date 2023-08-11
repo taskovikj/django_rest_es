@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>List Blog Posts</title>
-</head>
-<body>
+{% extends "base/layout.html" %}
+
+{% block body %}
     <h1>List of Blog Posts</h1>
     {% for blog_post in blog_posts %}
-        <h2>{{ blog_post.title|safe }}</h2>
-        <p>{{ blog_post.content|safe }}</p>
-    {% endfor %}
-</body>
-</html>
+            <li><a href="{% url 'blog_detail' blog_id=blog_post.id %}">{{ blog_post.title }}</a></li>
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}{{ blog_post.title }} - BlogPost{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>{{ blog_post.title }}</h2>
+    <p>Author: {% if blog_post.author == request.user %}
+                    <a href="{% url 'user_profile'%}">{{ blog_post.author.username }}</a>
+                {% else %}
+                    <a href="{% url 'user_profile_view' user_id=blog_post.author.id %}">{{ blog_post.author.username }}</a>
+                {% endif %}
+    </p>
+    <p>{{ blog_post.content | safe }}</p>
+</div>
+{% endblock %}

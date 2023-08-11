@@ -1,0 +1,12 @@
+{% extends "base/layout.html" %}
+
+{% block body %}
+<<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <label for="{{ form.profile_photo.id_for_label }}">Profile Photo:</label>
+    {{ form.profile_photo }}
+    <button type="submit">Register</button>
+</form>
+
+{% endblock %}

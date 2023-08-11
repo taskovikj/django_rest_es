@@ -1,0 +1,30 @@
+{% extends 'base/layout.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>User Profile</h2>
+    
+    <h3>{{ user.username }}</h3>
+    <p>Email: {{ user.email }}</p>
+    <p>Status: {{ user.status }}</p>
+    <p>Bio: {{ user.bio }}</p>
+
+    <h3>Your Articles</h3>
+    <ul>
+        {% for post in blog_posts %}
+            <li>{{ post.title }}</li>
+        {% empty %}
+            <li>No articles yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Edit Profile</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

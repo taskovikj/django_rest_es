@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base/layout.html" %}
+
+{% block body %}
 <h1>Search Items</h1>
   <form action="{% url 'search_items' %}" method="GET">
     <input type="text" name="q" placeholder="Search...">
@@ -19,5 +15,4 @@
       {% endfor %}
     </ul>
   {% endif %}
-</body>
-</html>
+{% endblock %}
