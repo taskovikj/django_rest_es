@@ -1,0 +1,13 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ category.name }} Category{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ category.name }} Category</h1>
+    <ul>
+        {% for blog_post in blog_posts %}
+            <li><a href="{% url 'blog_detail' blog_id=blog_post.id %}">{{ blog_post.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

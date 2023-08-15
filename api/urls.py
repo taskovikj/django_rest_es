@@ -7,6 +7,6 @@ urlpatterns = [
     path('api/authors/',views.getAuthors),
     path('api/add_author/',views.add_author),
     path('api/books/',views.getBooks),
-    path('search/', views.search_items, name='search_items'),
+    # path('search/', views.search_items, name='search_items'),
 
 ]

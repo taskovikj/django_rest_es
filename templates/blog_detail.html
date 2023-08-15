@@ -1,16 +1,83 @@
 {% extends 'base/layout.html' %}
-
+{% load social_share %}
 {% block title %}{{ blog_post.title }} - BlogPost{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h2>{{ blog_post.title }}</h2>
-    <p>Author: {% if blog_post.author == request.user %}
-                    <a href="{% url 'user_profile'%}">{{ blog_post.author.username }}</a>
+   <div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h2 class="mb-4">{{ blog_post.title }}</h2>
+            <p class="mb-2">Author:
+                {% if blog_post.author == request.user %}
+                    <a href="{% url 'user_profile' %}">{{ blog_post.author.username }}</a>
                 {% else %}
                     <a href="{% url 'user_profile_view' user_id=blog_post.author.id %}">{{ blog_post.author.username }}</a>
                 {% endif %}
-    </p>
-    <p>{{ blog_post.content | safe }}</p>
+            </p>
+            <p class="mb-2">Category:
+                <a href="{% url 'category_posts' category_slug=blog_post.category.slug %}">{{ category.name }}</a>
+            </p>
+            <p>{{ blog_post.content | safe }}</p>
+            <div class="mb-4">
+                <p>Total Upvotes: {{ total_upvotes }}</p>
+                <p>Total Downvotes: {{ total_downvotes }}</p>
+            </div>
+            <div class="d-flex align-items-center mb-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'vote_post' blog_id=blog_post.id vote_type='upvote' %}"
+                       class="btn btn-sm btn-primary me-2">Upvote</a>
+                    <a href="{% url 'vote_post' blog_id=blog_post.id vote_type='downvote' %}"
+                       class="btn btn-sm btn-danger">Downvote</a>
+                {% endif %}
+            </div>
+            <div class="d-flex">
+
+                {% post_to_linkedin object_or_url %}
+
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
+    </div>
+
+    <div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h3 class="mb-4">Comments</h3>
+            <ul class="list-unstyled">
+                {% for comment in comments %}
+                    <li class="mb-3 border-bottom">
+                        <p>{{ comment.body|safe }}</p>
+                        <p class="text-muted mb-0">By: {{ comment.user.username }}</p>
+                    </li>
+                {% empty %}
+                    <li>No comments yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h3 class="mb-4">Add a Comment</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 {% endblock %}

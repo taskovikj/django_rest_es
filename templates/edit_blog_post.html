@@ -4,14 +4,9 @@
     <h1>Edit</h1>
 <form method="post">
     {% csrf_token %}
-    <label for="title">Title:</label>
-    <input type="text" name="title" id="title" value="{{ blog_post.title }}" required><br>
-    <label for="content">Content:</label><br>
-    <textarea name="content" id="content" rows="4" cols="50" required>{{ blog_post.content }}</textarea><br>
-    <button type="submit">Save</button>
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
 </form>
 
-<script>
-    CKEDITOR.replace('content');
-</script>
+
 {% endblock %}

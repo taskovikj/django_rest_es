@@ -29,11 +29,13 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("index/", views.index, name="index"),
+    path("", views.index, name="index"),
     path('user/',include('user.urls')),
     path('blog/<int:blog_id>/', views.blog_detail_view, name='blog_detail'),
+    path('category/<str:category_slug>/', views.category_posts_view, name='category_posts'),
+
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

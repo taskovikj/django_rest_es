@@ -1,17 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from base.models import CustomUser, BlogPost,UserFollowing
+from base.models import CustomUser, BlogPost, UserFollowing, Vote
 from base.forms import CustomUserInforForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from base.views import blog_detail_view
+
 
 @login_required
 def user_profile_edit(request):
     user = request.user
-    blog_posts = BlogPost.objects.filter(author=user)
+    blog_posts = BlogPost.objects.filter(author=user, draft=False)
+    drafts = BlogPost.objects.filter(author=user, draft=True)
+    unpublished = get_unpublished_blogs_for_user(user)
 
     if request.method == 'POST':
-        form = CustomUserInforForm(request.POST, instance=user)
+        form = CustomUserInforForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             return redirect('user_profile')
@@ -21,7 +26,9 @@ def user_profile_edit(request):
     context = {
         'user': user,
         'form': form,
-        'blog_posts': blog_posts
+        'blog_posts': blog_posts,
+        'drafts': drafts,
+        'unpublished': unpublished
     }
     return render(request, 'user/user_profile.html', context)
 
@@ -29,15 +36,44 @@ def user_profile_edit(request):
 def user_profile_view(request, user_id):
     user = get_object_or_404(get_user_model(), id=user_id)
     blog_posts = BlogPost.objects.filter(author=user)
+    is_following = UserFollowing.objects.filter(follower=request.user,
+                                                following=user).exists() if request.user.is_authenticated else False
 
+    followers = UserFollowing.objects.filter(following=request.user).count()
+    following = UserFollowing.objects.filter(follower=request.user).count()
     context = {
+        'num_articles':blog_posts.count(),
+        'followers':followers,
+        'following': following,
         'user': user,
-        'blog_posts': blog_posts
+        'blog_posts': blog_posts,
+        'is_following': is_following
     }
     return render(request, 'user/user_profile_view.html', context)
 
 
-def follow(request,user_id):
+@login_required
+def vote_post(request, blog_id, vote_type):
+    post = get_object_or_404(BlogPost, id=blog_id)
+    user = request.user
+
+    if vote_type == 'upvote':
+        vote_value = Vote.UPVOTE
+    elif vote_type == 'downvote':
+        vote_value = Vote.DOWNVOTE
+
+    try:
+        old_vote = Vote.objects.get(user=user, blog_post=post)
+        if old_vote.vote != vote_value:
+            old_vote.delete()
+            vote = Vote.objects.create(user=user, blog_post=post, vote=vote_value)
+    except Vote.DoesNotExist:
+        vote = Vote.objects.create(user=user, blog_post=post, vote=vote_value)
+
+    return redirect('blog_detail', blog_id=blog_id)
+
+
+def follow(request, user_id):
     user = get_object_or_404(get_user_model(), id=user_id)
 
     if request.method == 'POST':
@@ -47,8 +83,29 @@ def follow(request,user_id):
         elif action == 'unfollow' and UserFollowing.objects.filter(follower=request.user, following=user).exists():
             UserFollowing.objects.filter(follower=request.user, following=user).delete()
 
-
     return redirect('user_profile_view', user_id=user_id)
 
 
+def following_posts_view(request):
+    user = request.user
+    following_relations = UserFollowing.objects.filter(follower=user)
+    following_users = following_relations.values_list('following', flat=True)
+    following_posts = BlogPost.objects.filter(author__in=following_users).order_by('-pub_date')
+    con=False
+    if following_posts.count()==0:
+        con = True
 
+    context = {
+        'con':con,
+        'blog_posts': following_posts,
+    }
+
+    return render(request, 'list_blog_posts.html', context)
+
+
+def get_unpublished_blogs_for_user(user):
+    current_datetime = timezone.now()
+    blog_posts = BlogPost.objects.filter(author=user, scheduled_date__gte=
+    current_datetime, draft=False
+                                         )
+    return blog_posts

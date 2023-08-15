@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Comment,BlogPost
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -8,7 +8,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2', 'bio', 'profile_photo')
+        fields = ('username', 'email', 'password1', 'password2', 'bio')
 
 
 
@@ -16,4 +16,54 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomUserInforForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'status', 'bio']
+        fields = ('username', 'email', 'status', 'bio', 'profile_picture')
+
+
+
+from django import forms
+from .models import Comment
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
+
+
+from django import forms
+from .models import BlogPost
+
+from django import forms
+from .models import BlogPost
+
+class BlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = ['title', 'content', 'category', 'scheduled_date', 'draft']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'scheduled_date': forms.DateInput(attrs={'type': 'date'}),
+            'draft': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+
+
+
+
+
+class EditBlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = ['title', 'content', 'category', 'scheduled_date', 'draft']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control'}),
+            'scheduled_date': forms.DateInput(attrs={'type': 'date'}),
+            'draft': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+

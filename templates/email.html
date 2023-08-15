@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Comment Notification</title>
+</head>
+<body>
+    <h1>New Comment Notification</h1>
+    <p>Hi {{ comment.post.author.username }},</p>
+    <p>A new comment has been posted on your article "{{ comment.post.title }}".</p>
+    <p>Comment: {{ comment.content }}</p>
+    <p>Best regards,</p>
+    <p>Your Blog Team</p>
+</body>
+</html>

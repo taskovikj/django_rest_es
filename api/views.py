@@ -42,27 +42,27 @@ def getBooks(requests):
 
 
 
-from django.shortcuts import render
-from base.search_indexes import ItemsDocument, BlogPostDocument
-
-def search_items(request):
-    query = request.GET.get('q', '')
-
-    # Create a search object
-    if query != "":
-        search = BlogPostDocument.search().query("wildcard", title=f"*{query}*")
-        # Execute the search
-        search_response = search.execute()
-        print("Search Response:", search_response)
-
-        # Extract the hits from the search response
-        search_results = search_response.hits
-    else:
-        search_results=""
-
-
-
-    return render(request, 'search.html', {'results': search_results})
+# from django.shortcuts import render
+# from base.search_indexes import ItemsDocument, BlogPostDocument
+#
+# def search_items(request):
+#     query = request.GET.get('q', '')
+#
+#     # Create a search object
+#     if query != "":
+#         search = BlogPostDocument.search().query("wildcard", title=f"*{query}*")
+#         # Execute the search
+#         search_response = search.execute()
+#         print("Search Response:", search_response)
+#
+#         # Extract the hits from the search response
+#         search_results = search_response.hits
+#     else:
+#         search_results=""
+#
+#
+#
+#     return render(request, 'search.html', {'results': search_results})
 
 
 

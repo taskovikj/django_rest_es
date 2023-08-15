@@ -3,28 +3,40 @@
 {% block title %}User Profile{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2>User Profile</h2>
-    
-    <h3>{{ user.username }}</h3>
-    <p>Email: {{ user.email }}</p>
-    <p>Status: {{ user.status }}</p>
-    <p>Bio: {{ user.bio }}</p>
+    <div class="container mt-5">
+        <h2>User Profile</h2>
 
-    <h3>Your Articles</h3>
-    <ul>
-        {% for post in blog_posts %}
-            <li>{{ post.title }}</li>
-        {% empty %}
-            <li>No articles yet.</li>
-        {% endfor %}
-    </ul>
+        <h3>{{ user.username }}</h3>
+        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s Profile Photo">
+        <p>Email: {{ user.email }}</p>
+        <p>Status: {{ user.status }}</p>
+        <p>Bio: {{ user.bio }}</p>
 
-    <h3>Edit Profile</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
-</div>
+        <h3>Your Articles</h3>
+        <ul>
+            {% for blog_post in blog_posts %}
+                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <h3>Your Drafts</h3>
+        <ul>
+            {% for blog_post in drafts %}
+                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <h3>Scheduled posts</h3>
+        <ul>
+            {% for blog_post in unpublished %}
+                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <h3>Edit Profile</h3>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
 {% endblock %}
