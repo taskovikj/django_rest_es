@@ -1,6 +1,6 @@
-from elasticsearch_dsl import Document, Text
+from elasticsearch_dsl import Document, Text, Date
 from elasticsearch_dsl.connections import connections
-from .models import Book
+from .models import Book, BlogPost
 
 connections.create_connection(hosts=['localhost'])
 
@@ -10,3 +10,6 @@ class BookIndex(Document):
 
     class Index:
         name = 'book_index'
+
+
+

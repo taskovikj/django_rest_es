@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from base.models import CustomUser, BlogPost, UserFollowing, Vote
-from base.forms import CustomUserInforForm
+from base.forms import CustomUserInfoForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from base.views import blog_detail_view
-
+from base.views import get_published_blogs
 
 @login_required
 def user_profile_edit(request):
@@ -14,18 +14,14 @@ def user_profile_edit(request):
     blog_posts = BlogPost.objects.filter(author=user, draft=False)
     drafts = BlogPost.objects.filter(author=user, draft=True)
     unpublished = get_unpublished_blogs_for_user(user)
-
-    if request.method == 'POST':
-        form = CustomUserInforForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile')
-    else:
-        form = CustomUserInforForm(instance=user)
+    followers = UserFollowing.objects.filter(following=user).count()
+    following = UserFollowing.objects.filter(follower=user).count()
 
     context = {
+        'num_articles': blog_posts.count(),
+        'followers': followers,
+        'following': following,
         'user': user,
-        'form': form,
         'blog_posts': blog_posts,
         'drafts': drafts,
         'unpublished': unpublished
@@ -33,14 +29,32 @@ def user_profile_edit(request):
     return render(request, 'user/user_profile.html', context)
 
 
+def author_articles(request,user_id):
+    user = get_object_or_404(CustomUser,id=user_id)
+    blog_posts = get_published_blogs().filter(author=user)
+    articles = True
+    return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
+                                                    'articles':articles})
+
+def author_unpublished(request):
+    blog_posts = get_unpublished_blogs_for_user(request.user)
+    unbublished = True
+    return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
+                                                    'unbublished':unbublished})
+
+def author_drafts(request):
+    blog_posts = BlogPost.objects.filter(author=request.user,draft=True)
+    draft = True
+    return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
+                                                    'draft':draft})
 def user_profile_view(request, user_id):
     user = get_object_or_404(get_user_model(), id=user_id)
     blog_posts = BlogPost.objects.filter(author=user)
     is_following = UserFollowing.objects.filter(follower=request.user,
                                                 following=user).exists() if request.user.is_authenticated else False
 
-    followers = UserFollowing.objects.filter(following=request.user).count()
-    following = UserFollowing.objects.filter(follower=request.user).count()
+    followers = UserFollowing.objects.filter(following=user).count()
+    following = UserFollowing.objects.filter(follower=user).count()
     context = {
         'num_articles':blog_posts.count(),
         'followers':followers,
@@ -51,6 +65,27 @@ def user_profile_view(request, user_id):
     }
     return render(request, 'user/user_profile_view.html', context)
 
+@login_required
+def profile_settings(request):
+    user = request.user
+
+    if request.method == 'POST':
+        form = CustomUserInfoForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')
+    else:
+        form = CustomUserInfoForm(instance=user)
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'user/user_settings.html', context)
+def user_articles(requests):
+    user = request.user
+    articles =get_published_blogs().filter(author=user)
+    drafts  = BlogPost.objects.filter(author=user,draft=True)
+    unpublished = get_unpublished_blogs_for_user(user)
 
 @login_required
 def vote_post(request, blog_id, vote_type):
@@ -86,21 +121,19 @@ def follow(request, user_id):
     return redirect('user_profile_view', user_id=user_id)
 
 
+@login_required()
 def following_posts_view(request):
     user = request.user
     following_relations = UserFollowing.objects.filter(follower=user)
     following_users = following_relations.values_list('following', flat=True)
     following_posts = BlogPost.objects.filter(author__in=following_users).order_by('-pub_date')
-    con=False
-    if following_posts.count()==0:
-        con = True
+
 
     context = {
-        'con':con,
         'blog_posts': following_posts,
     }
 
-    return render(request, 'list_blog_posts.html', context)
+    return render(request, 'base/list_blogs_by_condition.html', context)
 
 
 def get_unpublished_blogs_for_user(user):

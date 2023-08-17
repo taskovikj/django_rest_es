@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Comment,BlogPost
-
+from .models import CustomUser, Comment,BlogPost, Category
+from django.contrib.auth.forms import PasswordChangeForm
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     profile_photo = forms.ImageField(required=False)  # Add the profile_photo field
@@ -13,7 +13,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 
-class CustomUserInforForm(forms.ModelForm):
+class CustomUserInfoForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'status', 'bio', 'profile_picture')
@@ -27,6 +27,13 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['body']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['body'].widget.attrs.update({
+            'rows': 3,
+            'class': 'form-control',
+        })
 
 
 from django import forms
@@ -50,10 +57,6 @@ class BlogPostForm(forms.ModelForm):
 
 
 
-
-
-
-
 class EditBlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
@@ -67,3 +70,9 @@ class EditBlogPostForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
+
+
+class BlogPostFilterForm(forms.Form):
+    title = forms.CharField(required=False)
+    content = forms.CharField(required=False)
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="All", required=False)

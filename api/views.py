@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from base.models import Items, Book, Author
+from base.models import Items, Book, Author, Category
 from .serializers import ItemSerializer, BookSerializer, AuthorSerializer
 
 
@@ -42,27 +42,29 @@ def getBooks(requests):
 
 
 
-# from django.shortcuts import render
-# from base.search_indexes import ItemsDocument, BlogPostDocument
-#
-# def search_items(request):
-#     query = request.GET.get('q', '')
-#
-#     # Create a search object
-#     if query != "":
-#         search = BlogPostDocument.search().query("wildcard", title=f"*{query}*")
-#         # Execute the search
-#         search_response = search.execute()
-#         print("Search Response:", search_response)
-#
-#         # Extract the hits from the search response
-#         search_results = search_response.hits
-#     else:
-#         search_results=""
-#
-#
-#
-#     return render(request, 'search.html', {'results': search_results})
+from django.shortcuts import render
+from base.search_indexes import ItemsDocument, BlogPostDocument
+from elasticsearch_dsl import Document, Text, Keyword
+def search_items(request):
+    query = request.GET.get('q', '')
+    category = request.GET.get('category', '')
+    categories = Category.objects.all()
+
+    # Create a search object
+    search = BlogPostDocument.search()
+
+    if query:
+        query = query.strip()  # Remove leading/trailing spaces
+        search = search.query("wildcard", category=category)
+
+    if category:
+        search = search.filter('term', category=category)
+
+    # Execute the search
+    search_response = search.execute()
+    search_results = search_response.hits
+
+    return render(request, 'search.html', {'results': search_results, 'all_categories': categories})
 
 
 

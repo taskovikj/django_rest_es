@@ -8,21 +8,20 @@ from django.db.models.signals import Signal
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
+
 class CustomUser(AbstractUser):
     STATUS = (
-        ('author','author'),
+        ('author', 'author'),
         ('moderator', 'moderator')
     )
 
     email = models.EmailField(unique=True)
-    status = models.CharField(max_length=100,choices=STATUS,default='author')
-    bio = models.TextField("bio",max_length=600, default="", blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/',default='profile_pictures/profile-icon-9.png')
+    status = models.CharField(max_length=100, choices=STATUS, default='author')
+    bio = models.TextField("bio", max_length=600, default="", blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/profile-icon-9.png')
 
     def __str__(self):
         return self.username
-
-
 
 
 class Items(models.Model):
@@ -37,6 +36,7 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -73,9 +73,9 @@ class UserFollowing(models.Model):
     following = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='followers')
 
     created = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         unique_together = ('follower', 'following')
-
 
 
 class Comment(models.Model):
@@ -91,6 +91,7 @@ class Comment(models.Model):
 from django.db import models
 from django.contrib.auth import get_user_model
 
+
 class Vote(models.Model):
     UPVOTE = 1
     DOWNVOTE = -1
@@ -103,7 +104,15 @@ class Vote(models.Model):
     vote = models.SmallIntegerField(choices=VOTE_CHOICES)
 
 
+class UserInteraction(models.Model):
+    user_id = models.CharField(max_length=50)
+    visited_url = models.URLField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
 comment_posted = Signal()
+
+
 @receiver(comment_posted, sender=Comment)
 def send_comment_notification(sender, instance, **kwargs):
     post = instance.post

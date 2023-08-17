@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'elasticsearch:9200',  # Check if this matches your Elasticsearch service name
+        'hosts': 'elasticsearch:9200',  # Elasticsearch service name
     },
 }
 AUTH_USER_MODEL = 'base.CustomUser'
@@ -60,6 +60,8 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'branislav.taskovikj@gmail.com'
 EMAIL_HOST_PASSWORD = 'horvbpojzaerwpcq'
+
+
 # if not DEBUG:
 #     # Production Database configuration
 #     print("Production Database configuration")
@@ -96,6 +98,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'base.middleware.UniqueIdMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

@@ -4,39 +4,110 @@
 
 {% block body %}
     <div class="container mt-5">
-        <h2>User Profile</h2>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+          integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ti-icons@0.1.2/css/themify-icons.css">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
+                <div class="card border-0 shadow">
+                    <img src="{{ user.profile_picture.url }}" alt="...">
+                    <div class="card-body p-1-9 p-xl-5">
+                        <div class="mb-4">
+                            <h3 class="h4 mb-0">{{ user.username }}</h3>
+                            <span class="text-primary">{{ user.status|title }}</span>
+                        </div>
 
-        <h3>{{ user.username }}</h3>
-        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}'s Profile Photo">
-        <p>Email: {{ user.email }}</p>
-        <p>Status: {{ user.status }}</p>
-        <p>Bio: {{ user.bio }}</p>
+                        <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                             style="background-color: #efefef;" bis_skin_checked="1">
+                            <div bis_skin_checked="1">
+                                <p class="small text-muted mb-1">Articles</p>
+                                <p class="mb-0">{{ num_articles }}</p>
+                            </div>
+                            <div class="px-3" bis_skin_checked="1">
+                                <p class="small text-muted mb-1">Followers</p>
+                                <p class="mb-0">{{ followers }} </p>
+                            </div>
+                            <div bis_skin_checked="1">
+                                <p class="small text-muted mb-1">Following</p>
+                                <p class="mb-0">{{ following }}</p>
+                            </div>
+                        </div>
 
-        <h3>Your Articles</h3>
-        <ul>
-            {% for blog_post in blog_posts %}
-                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
-            {% endfor %}
-        </ul>
-        <h3>Your Drafts</h3>
-        <ul>
-            {% for blog_post in drafts %}
-                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
-            {% endfor %}
-        </ul>
-        <h3>Scheduled posts</h3>
-        <ul>
-            {% for blog_post in unpublished %}
-                <li><a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a></li>
-            {% endfor %}
-        </ul>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-3"><a href="#!"><i
+                                    class="far fa-envelope display-25 me-3 text-secondary"></i>{{ user.email }}</a>
+                            </li>
 
-        <h3>Edit Profile</h3>
-        <form method="POST" action="" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save Changes</button>
-        </form>
+                        </ul>
+
+                        {% if user != request.user %}
+                            {% if is_following %}
+                                <form method="post" action="{% url 'follow' user_id=user.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="unfollow">
+                                    <button type="submit" class="btn btn-danger">Unfollow</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'follow' user_id=user.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="follow">
+                                    <button type="submit" class="btn btn-primary">Follow</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="ps-lg-1-6 ps-xl-5">
+                    <div class="mb-5 wow fadeIn">
+                        <div class="text-start mb-1-6 wow fadeIn">
+                            <h2 class="h1 mb-0 text-primary">#About Me</h2>
+                        </div>
+                        <p>
+                            {{ user.bio }}
+                        </p>
+                    </div>
+                    <div class="mb-5 wow fadeIn">
+                        <div class="text-start mb-1-6 wow fadeIn">
+
+                            <div class="wow fadeIn">
+                                <div class="text-start mb-1-6 wow fadeIn">
+                                    <h2 class="mb-0 text-primary">Articles</h2>
+                                </div>
+                                <h3><a href="{% url 'author_articles' user_id=request.user.id %}">Your Articles</a></h3>
+                                <ul>
+                                    {% for blog_post in blog_posts|slice:":5" %}
+                                        <li>
+                                            <a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <h3><a href="{% url 'draft_articles' %}">Your Drafts</a></h3>
+                                <ul>
+                                    {% for blog_post in drafts|slice:":5"  %}
+                                        <li>
+                                            <a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <h3><a href="{% url 'unpublished_articles'%}">Scheduled posts</a></h3>
+                                <ul>
+                                    {% for blog_post in unpublished|slice:":5" %}
+                                        <li>
+                                            <a href="{% url 'edit_blog_post' post_id=blog_post.id %}">{{ blog_post.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

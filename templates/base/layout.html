@@ -125,9 +125,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'create_blog_post' %}">Write Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Projects</a>
-                        </li>
+
                     </ul>
                     <!-- Left links -->
                 </div>
@@ -162,11 +160,11 @@
                                     aria-labelledby="navbarDropdownMenuAvatar"
                             >
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'user_profile_view' user_id=user.id %}">My
+                                    <a class="dropdown-item" href="{% url 'user_profile'  %}">My
                                         profile</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'user_profile' %}">Settings</a>
+                                    <a class="dropdown-item" href="{% url 'user_settings' %}">Settings</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

@@ -8,3 +8,4 @@ psycopg2-binary==2.9.6
 pillow
 django-social-share
 django-bootstrap-datepicker-plus
+faker

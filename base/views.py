@@ -3,16 +3,19 @@ from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPo
 from .models import BlogPost
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Comment, Category
+from .models import CustomUser, Comment, Category, UserInteraction
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from .signals import comment_posted
 from django.utils import timezone
 from django.db.models import Q
-
+from django.db.models import Count, F, Sum, Case, When, IntegerField
+from django.shortcuts import render
+from .models import BlogPost, Vote
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 def login_view(request):
     if request.method == "POST":
@@ -89,9 +92,47 @@ def edit_blog_post_view(request, post_id):
     return render(request, 'edit_blog_post.html', {'form': form})
 
 
+import random
+from datetime import datetime, timedelta
+from django.utils import timezone
+from base.models import UserInteraction
+from django.utils.text import slugify
+
+
 def index(request):
+    # script
+
+
     blog_posts = get_published_blogs()
-    return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts})
+    annotated_blog_posts = blog_posts.annotate(
+        upvote_count=Sum(
+            Case(When(vote__vote=Vote.UPVOTE, then=1), default=0, output_field=IntegerField())
+        ),
+        downvote_count=Sum(
+            Case(When(vote__vote=Vote.DOWNVOTE, then=1), default=0, output_field=IntegerField())
+        ),
+        vote_difference=F('upvote_count') - F('downvote_count')
+    )
+
+
+    blog_posts = get_published_blogs().order_by('-pub_date')
+
+    posts_per_page = 10
+
+    paginator = Paginator(blog_posts, posts_per_page)
+    page_number = request.GET.get('page')
+
+    try:
+        blog_posts_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        blog_posts_page = paginator.page(1)
+    except EmptyPage:
+        blog_posts_page = paginator.page(paginator.num_pages)
+
+    sorted_blog_posts = annotated_blog_posts.order_by('-vote_difference')
+
+    return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts,
+                                                    'most_liked':sorted_blog_posts})
 
 
 def blog_detail_view(request, blog_id):
@@ -120,12 +161,13 @@ def blog_detail_view(request, blog_id):
     context = {
         'blog_post': post,
         'comments': comments,
-        'category':category,
+        'category': category,
         'form': form,
         'total_upvotes': total_upvotes,
         'total_downvotes': total_downvotes,
     }
     return render(request, 'blog_detail.html', context)
+
 
 def category_posts_view(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
@@ -135,6 +177,11 @@ def category_posts_view(request, category_slug):
         'blog_posts': blog_posts,
     }
     return render(request, 'category_posts.html', context)
+
+
+
+
+
 def get_published_blogs():
     current_datetime = timezone.now()
     blog_posts = BlogPost.objects.filter(
