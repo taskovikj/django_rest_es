@@ -121,7 +121,7 @@ def follow(request, user_id):
     return redirect('user_profile_view', user_id=user_id)
 
 
-@login_required()
+@login_required
 def following_posts_view(request):
     user = request.user
     following_relations = UserFollowing.objects.filter(follower=user)
@@ -134,6 +134,7 @@ def following_posts_view(request):
     }
 
     return render(request, 'base/list_blogs_by_condition.html', context)
+
 
 
 def get_unpublished_blogs_for_user(user):

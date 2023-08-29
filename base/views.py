@@ -16,6 +16,7 @@ from django.db.models import Count, F, Sum, Case, When, IntegerField
 from django.shortcuts import render
 from .models import BlogPost, Vote
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.method == "POST":
@@ -28,7 +29,7 @@ def login_view(request):
         email_from = settings.EMAIL_HOST_USER
         message = 'Test message'
         recipient_list = ['bane.taskovic@gmail.com', ]
-        send_mail(subject, message, email_from, recipient_list)
+        # send_mail(subject, message, email_from, recipient_list)
         # Check if authentication successful
         if user is not None:
             login(request, user)
@@ -60,6 +61,7 @@ def register_view(request):
     return render(request, 'register.html', {'form': form})
 
 
+@login_required
 def create_blog_post_view(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST)  # Use the form to process the data
@@ -74,6 +76,7 @@ def create_blog_post_view(request):
     return render(request, 'blog_post_form.html', {'form': form})
 
 
+@login_required
 def edit_blog_post_view(request, post_id):
     blog_post = get_object_or_404(BlogPost, id=post_id)
 
@@ -100,6 +103,8 @@ from django.utils.text import slugify
 
 
 def index(request):
+
+
     blog_posts = get_published_blogs()
     annotated_blog_posts = blog_posts.annotate(
         upvote_count=Sum(
@@ -165,7 +170,7 @@ def blog_detail_view(request, blog_id):
     }
     return render(request, 'blog_detail.html', context)
 
-
+@login_required
 def category_posts_view(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
     blog_posts = BlogPost.objects.filter(category=category)
@@ -185,3 +190,4 @@ def get_published_blogs():
         Q(scheduled_date__lte=current_datetime) | Q(scheduled_date__isnull=True), draft=False
     )
     return blog_posts
+
