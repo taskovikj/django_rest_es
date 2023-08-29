@@ -1,7 +1,7 @@
 
 # Django Blog Platform with Elasticsearch Integration
 
-Welcome to the documentation of our Django-based blog platform with Elasticsearch integration. This platform empowers users to create, manage, and explore blog posts effortlessly. With features like user authentication, a custom front page, social interactions, comments, and Elasticsearch-powered search, it offers a rich and engaging experience for both bloggers and readers.
+This platform empowers users to create, manage, and explore blog posts effortlessly. With features like user authentication, a custom front page, social interactions, comments, and Elasticsearch-powered search, it offers a rich and engaging experience for both bloggers and readers.
 
 ## Table of Contents
 - [Starting](#starting)
@@ -82,11 +82,11 @@ python enter credentials
 
 Our project leverages the Django web framework and the Django Rest Framework (DRF) to build RESTful APIs. Elasticsearch is integrated for efficient content indexing and searching. Here's an overview of the components:
 
-- **Django REST API**: The API offers endpoints for managing blog posts, comments, user profiles, author follow/unfollow actions, and user accounts.
+- **Django REST API**:
 
 - **Elasticsearch**: Elasticsearch efficiently indexes and searches blog posts. A custom Elasticsearch indexing service keeps the data in sync with the database.
 
-- **Frontend**: The frontend, developed using HTML, CSS, and JavaScript (e.g., React or Vue.js), communicates with the REST API to present blog posts, comments, user profiles, and manages user interactions.
+- **Frontend**: The frontend, developed using HTML, CSS, and JavaScript, communicates with the REST API to present blog posts, comments, user profiles, and manages user interactions.
 
 - **Authentication**: Django's built-in authentication system ensures user registration, login, and logout. Token-based authentication is commonly employed for API endpoints.
 
