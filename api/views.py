@@ -54,7 +54,7 @@ def search_items(request):
     search = BlogPostDocument.search()
 
     if query:
-        query = query.strip()  # Remove leading/trailing spaces
+        query = query.strip()
         search = search.query("wildcard", category=category)
 
     if category:
