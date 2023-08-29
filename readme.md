@@ -21,21 +21,18 @@ git clone https://github.com/taskovikj/django_rest_es.git
 docker-compose up -d --build
 ```
 
-### 1.2 Create database according to settings.py
-### 1.3 Create super user
+### 1.2 Whait for build
+### 1.3 Load the database fixture
 
 ```bash
 docker exec -it django sh
 ```
 ```bash
-python manage.py createsuperuser
-```
-```bash
-Choose username and password
+python manage.py loaddata data.json
 ```
 
 
-### 1.4 Restart django container
+
 
 ## Features
 
