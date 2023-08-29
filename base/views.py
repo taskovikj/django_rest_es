@@ -100,9 +100,6 @@ from django.utils.text import slugify
 
 
 def index(request):
-    # script
-
-
     blog_posts = get_published_blogs()
     annotated_blog_posts = blog_posts.annotate(
         upvote_count=Sum(
