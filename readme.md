@@ -31,7 +31,7 @@ docker exec -it django sh
 python manage.py createsuperuser
 ```
 ```bash
-python enter credentials
+Choose username and password
 ```
 
 
