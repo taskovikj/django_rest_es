@@ -1,4 +1,4 @@
-# Django BlogPost project
+
 # Django Blog Platform with Elasticsearch Integration
 
 Welcome to the documentation of our Django-based blog platform with Elasticsearch integration. This platform empowers users to create, manage, and explore blog posts effortlessly. With features like user authentication, a custom front page, social interactions, comments, and Elasticsearch-powered search, it offers a rich and engaging experience for both bloggers and readers.
