@@ -25,12 +25,7 @@ def login_view(request):
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
-        subject = 'Login'
-        email_from = settings.EMAIL_HOST_USER
-        message = 'Test message'
-        recipient_list = ['bane.taskovic@gmail.com', ]
-        # send_mail(subject, message, email_from, recipient_list)
-        # Check if authentication successful
+
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse("index"))

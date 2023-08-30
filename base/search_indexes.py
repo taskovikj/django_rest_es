@@ -27,7 +27,6 @@ class BlogPostDocument(Document):
     content = fields.TextField()
     author = fields.TextField(attr='author.username')
     pub_date = fields.DateField()
-    category = Keyword()
 
 
     class Django:

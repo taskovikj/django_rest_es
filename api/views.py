@@ -28,7 +28,7 @@ def getAuthors(requests):
 
 @api_view(['POST'])
 def add_author(request):
-    serializer = AuthorSerializer(data=requests.data)
+    serializer = AuthorSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -47,24 +47,27 @@ from base.search_indexes import ItemsDocument, BlogPostDocument
 from elasticsearch_dsl import Document, Text, Keyword
 def search_items(request):
     query = request.GET.get('q', '')
-    category = request.GET.get('category', '')
-    categories = Category.objects.all()
 
     # Create a search object
-    search = BlogPostDocument.search()
+    search = ItemsDocument.search().query("multi_match", query=query, fields=['name'])
+    if query != "":
+        search = BlogPostDocument.search().query("wildcard", title=f"*{query}*")
+        # Execute the search
+        search_response = search.execute()
+        print("Search Response:", search_response)
 
-    if query:
-        query = query.strip()
-        search = search.query("wildcard", category=category)
-
-    if category:
-        search = search.filter('term', category=category)
+        # Extract the hits from the search response
+        search_results = search_response.hits
+    else:
+        search_results=""
 
     # Execute the search
     search_response = search.execute()
+
+    # Extract the hits from the search response
     search_results = search_response.hits
 
-    return render(request, 'search.html', {'results': search_results, 'all_categories': categories})
+    return render(request, 'search.html', {'results': search_results})
 
 
 
