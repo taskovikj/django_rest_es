@@ -124,7 +124,7 @@ Users can utilize the Elasticsearch-powered search to find posts using keywords,
 
 ## Conclusion
 
-Our project delivers a feature-rich blog platform with Elasticsearch integration to ensure efficient content search and indexing. It includes user authentication, personalized front pages, social interactions, comments, and email notifications to enhance the user experience. Whether you're a blogger or a reader, our platform aims to provide an engaging and seamless experience for all.
+This project delivers a feature-rich blog platform with Elasticsearch integration to ensure efficient content search and indexing. It includes user authentication, personalized front pages, social interactions, comments, and email notifications to enhance the user experience. Whether you're a blogger or a reader, our platform aims to provide an engaging and seamless experience for all.
 
 
 
