@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User, AbstractUser
