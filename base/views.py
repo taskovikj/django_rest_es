@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPostForm
-from .models import BlogPost
+from .models import BlogPost, UserFollowing
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Comment, Category, UserInteraction
@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
-from .signals import comment_posted
+# from .signals import comment_posted
 from django.utils import timezone
 from django.db.models import Q
 from django.db.models import Count, F, Sum, Case, When, IntegerField
@@ -133,10 +133,12 @@ def index(request):
 
     sorted_blog_posts = annotated_blog_posts.order_by('-vote_difference')
 
-    return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts,
+    return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts_page,
                                                     'most_liked':sorted_blog_posts})
 
 
+
+@login_required
 def blog_detail_view(request, blog_id):
     post = get_object_or_404(BlogPost, id=blog_id)
     comments = Comment.objects.filter(post=post)

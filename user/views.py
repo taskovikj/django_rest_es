@@ -1,3 +1,5 @@
+from base import models
+from django.db.models import Count, Sum, Q
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from base.models import CustomUser, BlogPost, UserFollowing, Vote
@@ -64,6 +66,17 @@ def user_profile_view(request, user_id):
         'is_following': is_following
     }
     return render(request, 'user/user_profile_view.html', context)
+
+def recommended_authors(request):
+    authors  = CustomUser.objects.filter(status='author')
+    authors = authors.annotate(
+        num_articles=Count('blogpost'),
+        total_followers=Count('followers__follower', distinct=True),  # Count the followers directly
+        total_upvotes=Sum('blogpost__vote__vote', filter=Q(blogpost__vote__vote=Vote.UPVOTE)),
+        total_downvotes=Sum('blogpost__vote__vote', filter=Q(blogpost__vote__vote=Vote.DOWNVOTE))
+    )
+    return render(request, 'user/recommend_authors.html', {'authors':authors.order_by('-total_followers'
+    )})
 
 @login_required
 def profile_settings(request):

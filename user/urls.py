@@ -11,4 +11,5 @@ urlpatterns = [
     path('posts/<int:user_id>', views.author_articles, name='author_articles'),
     path('unpublished/', views.author_unpublished, name='unpublished_articles'),
     path('drafts/', views.author_drafts, name='draft_articles'),
+    path('authors/', views.recommended_authors, name='recommended_authors'),
 ]
