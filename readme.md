@@ -28,10 +28,15 @@ docker-compose up -d --build
 docker exec -it django sh
 ```
 ```bash
-python manage.py loaddata data.json
+python manage.py loaddata dump.json
 ```
-
-
+### 1.4 Build Elasticsearch indexes
+```bash
+docker exec -it django sh
+```
+```bash
+python manage.py search_index --rebuild
+```
 
 
 ## Features
