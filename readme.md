@@ -28,10 +28,15 @@ docker-compose up -d --build
 docker exec -it django sh
 ```
 ```bash
-python manage.py loaddata data.json
+python manage.py loaddata dump.json
 ```
-
-
+### 1.4 Build Elasticsearch indexes
+```bash
+docker exec -it django sh
+```
+```bash
+python manage.py search_index --rebuild
+```
 
 
 ## Features
@@ -119,7 +124,7 @@ Users can utilize the Elasticsearch-powered search to find posts using keywords,
 
 ## Conclusion
 
-Our project delivers a feature-rich blog platform with Elasticsearch integration to ensure efficient content search and indexing. It includes user authentication, personalized front pages, social interactions, comments, and email notifications to enhance the user experience. Whether you're a blogger or a reader, our platform aims to provide an engaging and seamless experience for all.
+This project delivers a feature-rich blog platform with Elasticsearch integration to ensure efficient content search and indexing. It includes user authentication, personalized front pages, social interactions, comments, and email notifications to enhance the user experience. Whether you're a blogger or a reader, our platform aims to provide an engaging and seamless experience for all.
 
 
 
