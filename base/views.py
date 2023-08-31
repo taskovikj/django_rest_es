@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPostForm
 from .models import BlogPost, UserFollowing
+from .signals import comment_posted
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Comment, Category, UserInteraction

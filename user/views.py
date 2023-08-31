@@ -1,5 +1,5 @@
 from base import models
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Q, When, Case, IntegerField, OuterRef, Subquery
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from base.models import CustomUser, BlogPost, UserFollowing, Vote
@@ -9,6 +9,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from base.views import blog_detail_view
 from base.views import get_published_blogs
+
+
 
 @login_required
 def user_profile_edit(request):
@@ -70,10 +72,13 @@ def user_profile_view(request, user_id):
 def recommended_authors(request):
     authors  = CustomUser.objects.filter(status='author')
     authors = authors.annotate(
-        num_articles=Count('blogpost'),
-        total_followers=Count('followers__follower', distinct=True),  # Count the followers directly
-        total_upvotes=Sum('blogpost__vote__vote', filter=Q(blogpost__vote__vote=Vote.UPVOTE)),
-        total_downvotes=Sum('blogpost__vote__vote', filter=Q(blogpost__vote__vote=Vote.DOWNVOTE))
+        num_articles=Count('blogpost',distinct=True),
+        total_followers=Count('followers__follower', distinct=True),
+        total_upvotes=Subquery(
+            BlogPost.objects.filter(author=OuterRef('pk'))
+            .annotate(upvotes=Sum(Case(When(vote__vote=Vote.UPVOTE, then=1), default=0, output_field=IntegerField())))
+            .values('upvotes')[:1]
+        )
     )
     return render(request, 'user/recommend_authors.html', {'authors':authors.order_by('-total_followers'
     )})
@@ -95,7 +100,7 @@ def profile_settings(request):
     }
     return render(request, 'user/user_settings.html', context)
 def user_articles(requests):
-    user = request.user
+    user = requests.user
     articles =get_published_blogs().filter(author=user)
     drafts  = BlogPost.objects.filter(author=user,draft=True)
     unpublished = get_unpublished_blogs_for_user(user)

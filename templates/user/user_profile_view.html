@@ -75,11 +75,11 @@
 
                             <div class="wow fadeIn">
                                 <div class="text-start mb-1-6 wow fadeIn">
-                                    <h2 class="mb-0 text-primary"><a href="{% url 'author_articles' user_id=request.user.id %}">Articles</a</h2>
+                                    <h2 class="mb-0 text-primary"><a href="{% url 'author_articles' user_id=user.id %}">Articles</a></h2>
                                 </div>
                                 <ul>
                                     {% for post in blog_posts|slice:":5" %}
-                                        <li>{{ post.title }}</li>
+                                        <li><a href="{% url 'blog_detail' blog_id=post.id %}">{{ post.title }}</a></li>
                                     {% empty %}
                                         <li>No articles yet.</li>
                                     {% endfor %}
