@@ -7,7 +7,6 @@ from base.forms import CustomUserInfoForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from base.views import blog_detail_view
 from base.views import get_published_blogs
 
 
@@ -65,7 +64,7 @@ def user_profile_view(request, user_id):
         'following': following,
         'user': user,
         'blog_posts': blog_posts,
-        'is_following': is_following
+        'is_following': is_following,
     }
     return render(request, 'user/user_profile_view.html', context)
 

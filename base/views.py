@@ -18,6 +18,7 @@ from django.shortcuts import render
 from .models import BlogPost, Vote
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
+from .ml_engine import get_recommendations
 
 def login_view(request):
     if request.method == "POST":
@@ -99,6 +100,9 @@ from django.utils.text import slugify
 
 
 def index(request):
+    user_id = request.COOKIES.get('user_id')
+    if user_id is not None:
+        recommended_posts = get_recommendations(user_id)
 
 
     blog_posts = get_published_blogs()
@@ -130,7 +134,7 @@ def index(request):
     sorted_blog_posts = annotated_blog_posts.order_by('-vote_difference')
 
     return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts_page,
-                                                    'most_liked':sorted_blog_posts})
+                                                    'most_liked':sorted_blog_posts,'user_id1':user_id,'recommended_posts':recommended_posts})
 
 
 

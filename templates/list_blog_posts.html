@@ -5,11 +5,11 @@
 
     <div class="container">
         {% if con %}
-            <h1>Follow author to have a custom front page</h1>
+            <h1>Follow author to have a custom front page </h1>
         {% endif %}
         <div class="row mb-4">
-            <h1>Most liked articles</h1>
-            {% for blog_post in most_liked|slice:":4" %}
+            <h1>Most liked articles {{ user_id1 }}</h1>
+            {% for blog_post in recommended_posts|slice:":4" %}
                 <div class="col-md-3">
                     <div class="card">
                         {% if blog_post.image %}
