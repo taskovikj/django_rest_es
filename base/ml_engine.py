@@ -4,19 +4,20 @@ from lightfm import LightFM
 from lightfm.cross_validation import random_train_test_split
 from lightfm.data import Dataset
 from .models import UserInteraction
-
+from datetime import  datetime
 
 def preprocess_data(df):
     # You can use apply to process the 'visited_url' column
     df['visited_url'] = df['visited_url'].apply(lambda url: int(url.split('/')[2]))
 
     # Drop the 'id' column if you don't need it
-    df = df.drop(columns=['id'])
+    # df = df.drop(columns=['id'])
 
     # Factorize user_id to start from 1
     df['user_id'] = pd.factorize(df['user_id'])[0] + 1
 
     # Normalize timestamp
+    df['timestamp'] = df['timestamp'].apply(lambda t: int(datetime.timestamp(t)))
     min_timestamp = df['timestamp'].min()
     max_timestamp = df['timestamp'].max()
     df['timestamp'] = (df['timestamp'] - min_timestamp) / (max_timestamp - min_timestamp)
