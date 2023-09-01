@@ -4,40 +4,31 @@ from lightfm import LightFM
 from lightfm.cross_validation import random_train_test_split
 from lightfm.data import Dataset
 from .models import UserInteraction
-from datetime import  datetime
 
-def preprocess_data(df):
-    # You can use apply to process the 'visited_url' column
-    df['visited_url'] = df['visited_url'].apply(lambda url: int(url.split('/')[2]))
 
-    # Drop the 'id' column if you don't need it
-    # df = df.drop(columns=['id'])
-
-    # Factorize user_id to start from 1
+def preprocess_data(df=None):
+    df['visited_url'] = df['visited_url'].map(lambda url: int(url.split('/')[2]))
+    df.drop(columns=['id'], inplace=True)
     df['user_id'] = pd.factorize(df['user_id'])[0] + 1
 
-    # Normalize timestamp
-    df['timestamp'] = df['timestamp'].apply(lambda t: int(datetime.timestamp(t)))
-    min_timestamp = df['timestamp'].min()
-    max_timestamp = df['timestamp'].max()
-    df['timestamp'] = (df['timestamp'] - min_timestamp) / (max_timestamp - min_timestamp)
+    df['timestamp'] = pd.to_datetime(df['timestamp']).astype(int) // 10 ** 9
+    df['timestamp'] = (df['timestamp'] - df['timestamp'].min()) / (
+            df['timestamp'].max() - df['timestamp'].min())
 
     return df
 
 
 def get_dataset():
-    # Retrieve data from the UserInteraction model
-    interactions = UserInteraction.objects.values_list('user_id', 'visited_url', 'timestamp')
+    interactions = list(UserInteraction.objects.values_list())
+    df = pd.DataFrame(interactions, columns= ['id', 'user_id','visited_url', 'timestamp'])
 
-    # Create a DataFrame from the interactions
-    df = pd.DataFrame(interactions, columns=['user_id', 'visited_url', 'timestamp'])
-
-    # Preprocess the data
     df = preprocess_data(df)
 
+    data = [tuple(i) for i in df.values]
+
     # Extract unique users and posts
-    users = set(df['user_id'])
-    posts = set(df['visited_url'])
+    users = set(row[0] for row in data)
+    posts = set(row[1] for row in data)
 
     # Create a Dataset object
     dataset = Dataset()
@@ -46,11 +37,12 @@ def get_dataset():
     return df, dataset
 
 
-def build_model(df, new_dataset):
+def build_model(df=None, new_dataset=None):
     dataset = new_dataset
+    data = [tuple(i) for i in df.values]
 
     # Build interactions matrix
-    (interactions, weights) = dataset.build_interactions(df.itertuples(index=False))
+    (interactions, weights) = dataset.build_interactions((row[0], row[1]) for row in data)
 
     # Split data into train and test sets
     train, test = random_train_test_split(interactions)
@@ -62,17 +54,22 @@ def build_model(df, new_dataset):
     return model
 
 
-def get_recommendations(user_id, num_recommendations=5):
+def get_recommendations(user_id=-1, num_recomendations=5):
     df, dataset = get_dataset()
     model = build_model(df, dataset)
 
+    data = [tuple(i) for i in df.values]
+    posts = set(row[1] for row in data)
+
     # Recommend items for a specific user
     user_idx = dataset.mapping()[0][user_id]
-    n_items = len(dataset.items())
-
-    scores = model.predict(user_ids=user_idx, item_ids=np.arange(n_items))
+    n_items = len(posts)
+    item_indices = np.arange(n_items)  # Create a NumPy array of item indices
+    scores = model.predict(user_ids=user_idx, item_ids=item_indices)
 
     # Get top recommendations
-    top_recommendations = np.argsort(-scores)[:num_recommendations]
+    top_recommendations = sorted(zip(posts, scores), key=lambda x: -x[1])[:num_recomendations]
+
+    top_recommendations = [i for i,_ in top_recommendations]
 
     return top_recommendations
