@@ -65,7 +65,6 @@ def get_recommendations(user_id, num_recomendations=5):
     posts = set(row[1] for row in data)
 
     # Recommend items for a specific user
-    # print(dataset.mapping())
     if user_id not in dataset.mapping()[0].keys():
         post_visits_counts = df.groupby('visited_url').size().reset_index(name='visit_count')
         sorted_posts = post_visits_counts.sort_values(by='visit_count', ascending=False)
