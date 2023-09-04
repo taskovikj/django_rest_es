@@ -12,7 +12,7 @@ def preprocess_data(df=None):
     df['visited_url'] = df['visited_url'].map(lambda url: int(url.split('/')[2]))
     df.drop(columns=['id'], inplace=True)
     df['timestamp'] = df['timestamp'].apply(lambda t: int(datetime.timestamp(t)))
-    df['timestamp'] = pd.to_datetime(df['timestamp']).astype(int) // 10 ** 9
+
     df['timestamp'] = (df['timestamp'] - df['timestamp'].min()) / (
             df['timestamp'].max() - df['timestamp'].min())
 
@@ -68,7 +68,7 @@ def get_recommendations(user_id, num_recomendations=5):
     # print(dataset.mapping())
     if user_id not in dataset.mapping()[0].keys():
         post_visits_counts = df.groupby('visited_url').size().reset_index(name='visit_count')
-        sorted_posts = post_visits_counts.sort_values(by='visit_count ', ascending=False)
+        sorted_posts = post_visits_counts.sort_values(by='visit_count', ascending=False)
         return sorted_posts['visited_url'][:num_recomendations].values
 
     user_idx = dataset.mapping()[0][user_id]

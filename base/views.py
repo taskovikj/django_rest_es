@@ -103,8 +103,7 @@ from django.utils.text import slugify
 def index(request):
     user_id = request.COOKIES.get('user_id')
     if user_id is not None:
-        recommended_posts = get_recommendations(user_id)
-        print(recommended_posts)
+        recommended_posts = list(get_recommendations(user_id))
 
     blog_posts = get_published_blogs()
     annotated_blog_posts = blog_posts.annotate(
@@ -135,7 +134,7 @@ def index(request):
 
     return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts_page,
                                                     'most_liked': sorted_blog_posts, 'user_id1': user_id,
-                                                    'recommended_posts': list (recommended_posts)})
+                                                    'recommended_posts': recommended_posts})
 
 
 def blog_detail_view(request, blog_id):
