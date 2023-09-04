@@ -20,6 +20,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
 from .ml_engine import get_recommendations
 
+
 def login_view(request):
     if request.method == "POST":
 
@@ -103,7 +104,7 @@ def index(request):
     user_id = request.COOKIES.get('user_id')
     if user_id is not None:
         recommended_posts = get_recommendations(user_id)
-
+        print(recommended_posts)
 
     blog_posts = get_published_blogs()
     annotated_blog_posts = blog_posts.annotate(
@@ -115,7 +116,6 @@ def index(request):
         ),
         vote_difference=F('upvote_count') - F('downvote_count')
     )
-
 
     blog_posts = get_published_blogs().order_by('-pub_date')
 
@@ -134,11 +134,10 @@ def index(request):
     sorted_blog_posts = annotated_blog_posts.order_by('-vote_difference')
 
     return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts_page,
-                                                    'most_liked':sorted_blog_posts,'user_id1':user_id,'recommended_posts':recommended_posts})
+                                                    'most_liked': sorted_blog_posts, 'user_id1': user_id,
+                                                    'recommended_posts': list (recommended_posts)})
 
 
-
-@login_required
 def blog_detail_view(request, blog_id):
     post = get_object_or_404(BlogPost, id=blog_id)
     comments = Comment.objects.filter(post=post)
@@ -172,6 +171,7 @@ def blog_detail_view(request, blog_id):
     }
     return render(request, 'blog_detail.html', context)
 
+
 @login_required
 def category_posts_view(request, category_slug):
     category = get_object_or_404(Category, slug=category_slug)
@@ -183,13 +183,9 @@ def category_posts_view(request, category_slug):
     return render(request, 'category_posts.html', context)
 
 
-
-
-
 def get_published_blogs():
     current_datetime = timezone.now()
     blog_posts = BlogPost.objects.filter(
         Q(scheduled_date__lte=current_datetime) | Q(scheduled_date__isnull=True), draft=False
     )
     return blog_posts
-
