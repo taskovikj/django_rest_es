@@ -11,3 +11,6 @@ python manage.py runserver 0.0.0.0:8000
 
 #Load database
 python manage.py loaddata dump.json
+
+#Create es indexes
+python manage.py search_index --rebuild
