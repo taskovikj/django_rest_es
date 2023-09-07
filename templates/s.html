@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Picture Upload</title>
+    <!-- Include Cropper.js and its dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="profile_photo" id="profile-photo-input">
+        <div>
+            <img id="cropped-image-preview" src="#" alt="Cropped Image">
+        </div>
+        <button type="button" id="crop-button">Crop</button>
+        <button type="submit">Save</button>
+    </form>
+
+    <!-- Include Cropper.js and its dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        // Initialize Cropper.js
+        const image = document.getElementById('cropped-image-preview');
+        const input = document.getElementById('profile-photo-input');
+        const cropper = new Cropper(image, {
+            aspectRatio: 1,
+            viewMode: 2,
+        });
+
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    cropper.replace(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('crop-button').addEventListener('click', () => {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('profile_photo', blob);
+                fetch('{% url "upload_profile_photo" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        alert('Profile photo uploaded and cropped successfully.');
+                    } else {
+                        alert('Error uploading profile photo.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

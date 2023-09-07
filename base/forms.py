@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Comment,BlogPost, Category
 from django.contrib.auth.forms import PasswordChangeForm
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     profile_photo = forms.ImageField(required=False)  # Add the profile_photo field

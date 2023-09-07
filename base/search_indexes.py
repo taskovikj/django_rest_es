@@ -27,7 +27,11 @@ class BlogPostDocument(Document):
     content = fields.TextField()
     author = fields.TextField(attr='author.username')
     pub_date = fields.DateField()
-
+    category = fields.ObjectField(
+        properties={
+            'name':fields.TextField()
+        }
+    )
 
     class Django:
         model = BlogPost
