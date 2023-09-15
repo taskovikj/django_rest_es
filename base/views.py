@@ -1,23 +1,19 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPostForm
-from .models import BlogPost, UserFollowing
 from .signals import comment_posted
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Comment, Category, UserInteraction
+from django.shortcuts import redirect
+from .models import Comment, Category
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.core.mail import send_mail
-from django.conf import settings
-# from .signals import comment_posted
-from django.utils import timezone
 from django.db.models import Q
-from django.db.models import Count, F, Sum, Case, When, IntegerField
+from django.db.models import F, Sum, Case, When, IntegerField
 from django.shortcuts import render
 from .models import BlogPost, Vote
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
+
+
 # from .ml_engine import get_recommendations
 
 
@@ -133,8 +129,6 @@ def index(request):
 
     sorted_blog_posts = annotated_blog_posts.order_by('-vote_difference')
 
-
-
     return render(request, 'list_blog_posts.html', {'blog_posts': blog_posts_page,
                                                     'most_liked': sorted_blog_posts, 'user_id1': user_id,
                                                     'recommended_posts': ''})
@@ -192,5 +186,3 @@ def get_published_blogs():
         Q(scheduled_date__lte=current_datetime) | Q(scheduled_date__isnull=True), draft=False
     )
     return blog_posts
-
-

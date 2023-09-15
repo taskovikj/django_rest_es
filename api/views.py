@@ -2,15 +2,16 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import Items, Book, Author, Category
 from .serializers import ItemSerializer, BookSerializer, AuthorSerializer
-from base.views import blog_detail_view
+
 
 
 @api_view(['GET'])
 def getData(requests):
-    person = {'name':'Branislav','age':'22'}
+    person = {'name': 'Branislav', 'age': '22'}
     items = Items.objects.all()
-    serializer = ItemSerializer(items,many=True)
+    serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 def addData(requests):
@@ -23,7 +24,7 @@ def addData(requests):
 @api_view(['GET'])
 def getAuthors(requests):
     authors = Author.objects.all()
-    serializer = AuthorSerializer(authors,many=True)
+    serializer = AuthorSerializer(authors, many=True)
     return Response(serializer.data)
 
 
@@ -38,17 +39,16 @@ def add_author(request):
 @api_view(['GET'])
 def getBooks(requests):
     books = Book.objects.all()
-    serializer = BookSerializer(books,many=True)
+    serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
-
 
 
 from django.shortcuts import render
 from base.search_indexes import ItemsDocument, BlogPostDocument
 from elasticsearch_dsl import Document, Text, Keyword
 
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def search_items(request):
     query = request.GET.get('q', '')
@@ -71,21 +71,4 @@ def search_items(request):
 
     print(search_results)
 
-
-    return render(request, 'search.html', {'results': search_results, 'query': query,'categories':all_categories})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return render(request, 'search.html', {'results': search_results, 'query': query, 'categories': all_categories})
