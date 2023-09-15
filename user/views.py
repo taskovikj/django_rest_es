@@ -1,14 +1,13 @@
-from base import models
-from django.db.models import Count, Sum, Q, When, Case, IntegerField, OuterRef, Subquery
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from base.models import CustomUser, BlogPost, UserFollowing, Vote
-from base.forms import CustomUserInfoForm
-from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Sum, When, Case, IntegerField, OuterRef, Subquery
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
 from django.utils import timezone
-from base.views import get_published_blogs
 
+from base.forms import CustomUserInfoForm
+from base.models import CustomUser, BlogPost, UserFollowing, Vote
+from base.views import get_published_blogs
 
 
 @login_required
@@ -32,24 +31,28 @@ def user_profile_edit(request):
     return render(request, 'user/user_profile.html', context)
 
 
-def author_articles(request,user_id):
-    user = get_object_or_404(CustomUser,id=user_id)
+def author_articles(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
     blog_posts = get_published_blogs().filter(author=user)
     articles = True
     return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
-                                                    'articles':articles})
+                                                         'articles': articles})
+
 
 def author_unpublished(request):
     blog_posts = get_unpublished_blogs_for_user(request.user)
     unbublished = True
     return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
-                                                    'unbublished':unbublished})
+                                                         'unbublished': unbublished})
+
 
 def author_drafts(request):
-    blog_posts = BlogPost.objects.filter(author=request.user,draft=True)
+    blog_posts = BlogPost.objects.filter(author=request.user, draft=True)
     draft = True
     return render(request, 'user/author_articles.html', {'blog_posts': blog_posts,
-                                                    'draft':draft})
+                                                         'draft': draft})
+
+
 def user_profile_view(request, user_id):
     user = get_object_or_404(get_user_model(), id=user_id)
     blog_posts = BlogPost.objects.filter(author=user)
@@ -59,8 +62,8 @@ def user_profile_view(request, user_id):
     followers = UserFollowing.objects.filter(following=user).count()
     following = UserFollowing.objects.filter(follower=user).count()
     context = {
-        'num_articles':blog_posts.count(),
-        'followers':followers,
+        'num_articles': blog_posts.count(),
+        'followers': followers,
         'following': following,
         'user': user,
         'blog_posts': blog_posts,
@@ -68,10 +71,11 @@ def user_profile_view(request, user_id):
     }
     return render(request, 'user/user_profile_view.html', context)
 
+
 def recommended_authors(request):
-    authors  = CustomUser.objects.filter(status='author')
+    authors = CustomUser.objects.filter(status='author')
     authors = authors.annotate(
-        num_articles=Count('blogpost',distinct=True),
+        num_articles=Count('blogpost', distinct=True),
         total_followers=Count('followers__follower', distinct=True),
         total_upvotes=Subquery(
             BlogPost.objects.filter(author=OuterRef('pk'))
@@ -79,8 +83,9 @@ def recommended_authors(request):
             .values('upvotes')[:1]
         )
     )
-    return render(request, 'user/recommend_authors.html', {'authors':authors.order_by('-total_followers'
-    )})
+    return render(request, 'user/recommend_authors.html', {'authors': authors.order_by('-total_followers'
+                                                                                       )})
+
 
 @login_required
 def profile_settings(request):
@@ -98,11 +103,7 @@ def profile_settings(request):
         'form': form,
     }
     return render(request, 'user/user_settings.html', context)
-def user_articles(requests):
-    user = requests.user
-    articles =get_published_blogs().filter(author=user)
-    drafts  = BlogPost.objects.filter(author=user,draft=True)
-    unpublished = get_unpublished_blogs_for_user(user)
+
 
 @login_required
 def vote_post(request, blog_id, vote_type):
@@ -145,13 +146,11 @@ def following_posts_view(request):
     following_users = following_relations.values_list('following', flat=True)
     following_posts = BlogPost.objects.filter(author__in=following_users).order_by('-pub_date')
 
-
     context = {
         'blog_posts': following_posts,
     }
 
     return render(request, 'base/list_blogs_by_condition.html', context)
-
 
 
 def get_unpublished_blogs_for_user(user):

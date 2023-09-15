@@ -1,7 +1,7 @@
-from django import forms
 from django.contrib.auth.forms import UserCreationForm
-
 from .models import CustomUser, Category
+from django import forms
+from .models import Comment
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -17,10 +17,6 @@ class CustomUserInfoForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'status', 'bio', 'profile_picture')
-
-
-from django import forms
-from .models import Comment
 
 
 class CommentForm(forms.ModelForm):

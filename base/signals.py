@@ -1,16 +1,15 @@
+from django.core.mail import send_mail
+from django.db.models.signals import Signal
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Book
-from .indexes import BookIndex
-from django.db.models.signals import Signal
-from django.dispatch import receiver
-from django.contrib.auth import get_user_model
-from .models import Comment
-from django.core.mail import send_mail
-from django.conf import settings
 
+from .indexes import BookIndex
+from .models import Book
+from .models import Comment
 
 comment_posted = Signal()
+
+
 @receiver(comment_posted, sender=Comment)
 def send_comment_notification(sender, instance, **kwargs):
     post = instance.post
@@ -21,11 +20,10 @@ def send_comment_notification(sender, instance, **kwargs):
         recipient_list = [post.author.email]
 
         send_mail(subject, message, from_email, recipient_list, fail_silently=True)
+
+
 @receiver(post_save, sender=Book)
 def index_book(sender, instance, **kwargs):
     book = instance
     BookIndex.init()
     BookIndex(meta={'id': book.id}, title=book.title, description=book.description).save()
-
-
-

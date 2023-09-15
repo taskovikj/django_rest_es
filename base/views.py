@@ -1,17 +1,18 @@
-from django.shortcuts import get_object_or_404
-from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPostForm
-from .signals import comment_posted
-from django.shortcuts import redirect
-from .models import Comment, Category
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.db.models import Q
-from django.db.models import F, Sum, Case, When, IntegerField
-from django.shortcuts import render
-from .models import BlogPost, Vote
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import F, Sum, Case, When, IntegerField
+from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.urls import reverse
+
+from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPostForm
+from .models import BlogPost, Vote
+from .models import Comment, Category
+from .signals import comment_posted
 
 
 # from .ml_engine import get_recommendations
@@ -89,11 +90,7 @@ def edit_blog_post_view(request, post_id):
     return render(request, 'edit_blog_post.html', {'form': form})
 
 
-import random
-from datetime import datetime, timedelta
 from django.utils import timezone
-from base.models import UserInteraction
-from django.utils.text import slugify
 
 
 def index(request):

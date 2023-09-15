@@ -1,7 +1,8 @@
+from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
 from base.models import Items, Book, Author, Category
+from base.search_indexes import BlogPostDocument
 from .serializers import ItemSerializer, BookSerializer, AuthorSerializer
 
 
@@ -40,10 +41,6 @@ def getBooks(requests):
     books = Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
-
-
-from django.shortcuts import render
-from base.search_indexes import BlogPostDocument
 
 
 def search_items(request):
