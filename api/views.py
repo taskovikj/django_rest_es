@@ -1,8 +1,8 @@
-from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from base.models import Items, Book, Author, Category
 from .serializers import ItemSerializer, BookSerializer, AuthorSerializer
-
 
 
 @api_view(['GET'])
@@ -44,10 +44,7 @@ def getBooks(requests):
 
 
 from django.shortcuts import render
-from base.search_indexes import ItemsDocument, BlogPostDocument
-from elasticsearch_dsl import Document, Text, Keyword
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from base.search_indexes import BlogPostDocument
 
 
 def search_items(request):
