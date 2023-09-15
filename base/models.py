@@ -83,10 +83,6 @@ class Comment(models.Model):
         return f"{self.user.username} - {self.post.title}"
 
 
-from django.db import models
-from django.contrib.auth import get_user_model
-
-
 class Vote(models.Model):
     UPVOTE = 1
     DOWNVOTE = -1
@@ -103,4 +99,3 @@ class UserInteraction(models.Model):
     user_id = models.CharField(max_length=50)
     visited_url = models.URLField()
     timestamp = models.DateTimeField(auto_now_add=True)
-
