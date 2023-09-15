@@ -1,5 +1,6 @@
-from django_elasticsearch_dsl import Document, fields, Keyword
+from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
+
 from .models import Items, BlogPost
 
 
@@ -16,7 +17,6 @@ class ItemsDocument(Document):
         model = Items
 
 
-
 @registry.register_document
 class BlogPostDocument(Document):
     class Index:
@@ -29,7 +29,7 @@ class BlogPostDocument(Document):
     pub_date = fields.DateField()
     category = fields.ObjectField(
         properties={
-            'name':fields.TextField()
+            'name': fields.TextField()
         }
     )
 

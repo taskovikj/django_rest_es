@@ -7,7 +7,6 @@ from .serializers import ItemSerializer, BookSerializer, AuthorSerializer
 
 @api_view(['GET'])
 def getData(requests):
-    person = {'name': 'Branislav', 'age': '22'}
     items = Items.objects.all()
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)

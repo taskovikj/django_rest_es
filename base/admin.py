@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Author, Book, BlogPost,CustomUser, Category
+from .models import Author, Book, BlogPost, CustomUser, Category
 
 admin.site.register(Book)
 admin.site.register(Author)

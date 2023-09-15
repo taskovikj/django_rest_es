@@ -1,7 +1,7 @@
-from django.db import models
 from ckeditor.fields import RichTextField
-from django.contrib.auth.models import User, AbstractUser
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User, AbstractUser
+from django.db import models
 
 
 class CustomUser(AbstractUser):
@@ -103,5 +103,4 @@ class UserInteraction(models.Model):
     user_id = models.CharField(max_length=50)
     visited_url = models.URLField()
     timestamp = models.DateTimeField(auto_now_add=True)
-
 

@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Comment,BlogPost, Category
-from django.contrib.auth.forms import PasswordChangeForm
+
+from .models import CustomUser, Category
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -12,17 +13,15 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2', 'bio')
 
 
-
-
 class CustomUserInfoForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'status', 'bio', 'profile_picture')
 
 
-
 from django import forms
 from .models import Comment
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -40,8 +39,6 @@ class CommentForm(forms.ModelForm):
 from django import forms
 from .models import BlogPost
 
-from django import forms
-from .models import BlogPost
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
@@ -57,7 +54,6 @@ class BlogPostForm(forms.ModelForm):
         }
 
 
-
 class EditBlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
@@ -70,7 +66,6 @@ class EditBlogPostForm(forms.ModelForm):
             'draft': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
         }
-
 
 
 class BlogPostFilterForm(forms.Form):
