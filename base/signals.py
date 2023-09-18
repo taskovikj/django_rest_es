@@ -15,7 +15,8 @@ def send_comment_notification(sender, instance, **kwargs):
     post = instance.post
     if post.author != instance.user:
         subject = 'New Comment on Your Article'
-        message = f"Hello {post.author.username},\n\nA new comment has been posted on your article '{post.title}'.\n\nComment: {instance.body}\n\nVisit your article to see the comment."
+        message = (f"Hello {post.author.username},\n\nA new comment has been posted on your article '"
+                   f"{post.title}'.\n\nComment: {instance.body}\n\nVisit your article to see the comment.")
         from_email = 'your-email@example.com'
         recipient_list = [post.author.email]
 
