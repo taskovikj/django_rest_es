@@ -62,6 +62,8 @@ class BlogPost(models.Model):
     scheduled_date = models.DateTimeField(null=True, blank=True)
     draft = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.title
 
 class UserFollowing(models.Model):
     follower = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='following')
