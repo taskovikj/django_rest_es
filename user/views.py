@@ -119,9 +119,9 @@ def vote_post(request, blog_id, vote_type):
         old_vote = Vote.objects.get(user=user, blog_post=post)
         if old_vote.vote != vote_value:
             old_vote.delete()
-            vote = Vote.objects.create(user=user, blog_post=post, vote=vote_value)
+            Vote.objects.create(user=user, blog_post=post, vote=vote_value)
     except Vote.DoesNotExist:
-        vote = Vote.objects.create(user=user, blog_post=post, vote=vote_value)
+        Vote.objects.create(user=user, blog_post=post, vote=vote_value)
 
     return redirect('blog_detail', blog_id=blog_id)
 
@@ -155,7 +155,6 @@ def following_posts_view(request):
 
 def get_unpublished_blogs_for_user(user):
     current_datetime = timezone.now()
-    blog_posts = BlogPost.objects.filter(author=user, scheduled_date__gte=
-    current_datetime, draft=False
-                                         )
+    blog_posts = BlogPost.objects.filter(author=user, scheduled_date__gte=current_datetime,
+                                         draft=False)
     return blog_posts
