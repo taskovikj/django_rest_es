@@ -32,6 +32,7 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('blog/<int:blog_id>/', views.blog_detail_view, name='blog_detail'),
     path('category/<str:category_slug>/', views.category_posts_view, name='category_posts'),
+    path("run_tests/", views.run_tests, name="run_tests"),
 
 ]
 

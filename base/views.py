@@ -13,7 +13,7 @@ from .forms import CustomUserCreationForm, CommentForm, BlogPostForm, EditBlogPo
 from .models import BlogPost, Vote
 from .models import Comment, Category
 from .signals import comment_posted
-
+from .tests import BlogPostModelTestCase,HostTest,AuthorModelTestCase
 
 # from .ml_engine import get_recommendations
 
@@ -183,3 +183,17 @@ def get_published_blogs():
         Q(scheduled_date__lte=current_datetime) | Q(scheduled_date__isnull=True), draft=False
     )
     return blog_posts
+
+
+def run_tests(request):
+    bp = BlogPostModelTestCase()
+    bp.setUp()
+    bp.test_blogpost_str()
+
+    am = AuthorModelTestCase()
+    am.test_author_str()
+
+    # ht = HostTest()
+    # ht.test_home_page()
+    # ht.test_login()
+    return HttpResponseRedirect(reverse("index"))
