@@ -1,7 +1,7 @@
 from django.test import LiveServerTestCase
 from django.test import TestCase
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+
 from .models import CustomUser, Author, Book, Category, BlogPost, UserFollowing, Comment, Vote, UserInteraction
 
 
@@ -132,5 +132,3 @@ class HostTest(LiveServerTestCase):
     #     assert 'Welcome' in driver.page_source
     #
     #     driver.quit()
-
-

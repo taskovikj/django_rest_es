@@ -193,7 +193,7 @@ def run_tests(request):
     am = AuthorModelTestCase()
     am.test_author_str()
 
-    # ht = HostTest()
-    # ht.test_home_page()
+    ht = HostTest()
+    ht.test_home_page()
     # ht.test_login()
     return HttpResponseRedirect(reverse("index"))
