@@ -6,6 +6,7 @@ This platform empowers users to create, manage, and explore blog posts effortles
 ## Table of Contents
 - [Starting](#starting)
 - [Features](#features)
+- [Testing](#testing)
 - [Project Architecture](#project-architecture)
 - [Usage](#usage)
 - [Conclusion](#conclusion)
@@ -79,6 +80,34 @@ python manage.py search_index --rebuild
 
 - **Efficient Search**: Elasticsearch powers the search functionality, enabling users to find posts swiftly.
 - **Search by Keywords, Tags, Authors**: Users can search for posts using keywords, tags, or author names.
+
+## Testing
+
+## GitHub Actions Setup
+
+Our project leverages GitHub Actions, a CI/CD (Continuous Integration/Continuous Deployment) platform provided by GitHub, to automate various tasks, including testing.
+Workflow Configuration
+
+Our project includes a GitHub Actions workflow defined in the .github/workflows directory. The primary workflow for testing is configured to run whenever a pull request is created or updated, and for pushes to the main branch.
+
+
+## Selenium Tests in Docker Standalone Container
+Our Selenium tests are designed to run in a Docker standalone container, ensuring consistent test execution environments. This approach simplifies the setup process and makes it easier to run tests locally or in CI/CD pipelines.
+
+## Instructions
+### 1.1 Prepare container
+
+```bash
+docker pull selenium/standalone-chrome
+```
+```bash
+docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome
+```
+### Run tests
+```bash
+python selenium_test.py
+```
+
 
 ## Project Architecture
 

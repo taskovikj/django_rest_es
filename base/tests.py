@@ -1,6 +1,4 @@
-from django.test import LiveServerTestCase
 from django.test import TestCase
-from selenium import webdriver
 
 from .models import CustomUser, Author, Book, Category, BlogPost, UserFollowing, Comment, Vote, UserInteraction
 
@@ -110,25 +108,3 @@ class UserInteractionModelTestCase(TestCase):
         user_interaction.save()
         self.assertIsNotNone(user_interaction.timestamp)
 
-
-class HostTest(LiveServerTestCase):
-    def test_home_page(self):
-        driver = webdriver.Chrome()
-
-        driver.get('http://127.0.0.1:8000/')
-        assert "BlogPost" in driver.title
-
-    # def test_login():
-    #     driver = webdriver.Chrome()
-    #     driver.get('http://localhost:8000/login')
-    #     username_input = driver.find_element_by_name('username')
-    #     password_input = driver.find_element_by_name('password')
-    #     login_button = driver.find_element_by_id('login-button')
-    #
-    #     username_input.send_keys('your_username')
-    #     password_input.send_keys('your_password')
-    #     login_button.click()
-    #
-    #     assert 'Welcome' in driver.page_source
-    #
-    #     driver.quit()
