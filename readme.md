@@ -22,7 +22,7 @@ git clone https://github.com/taskovikj/django_rest_es.git
 docker-compose up -d --build
 ```
 
-### 1.2 Whait for build
+### 1.2 Wait for build
 ### 1.3 Load the database fixture
 
 ```bash
@@ -103,9 +103,17 @@ docker pull selenium/standalone-chrome
 ```bash
 docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome
 ```
-### Run tests
+### Docker must be already running on port 8000 
+```bash
+docker exec -it django sh
+```
+### 1.2 Run seleniuim tests
 ```bash
 python selenium_test.py
+```
+### 1.3 Unit tests can also be run at this point
+```bash
+python manage.py test
 ```
 
 

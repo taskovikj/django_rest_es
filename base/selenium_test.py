@@ -1,10 +1,7 @@
 import time
-import os
-import django
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from models import CustomUser
 
 
 class HomePageTest(unittest.TestCase):
@@ -63,8 +60,8 @@ class LoginTest(unittest.TestCase):
         username_input = driver.find_element('name', 'username')
         password_input = driver.find_element('name', 'password')
 
-        username_input.send_keys('testuser99')  # TODO: Enter username and pw that already exist in DB
-        password_input.send_keys('securepassword223.')
+        username_input.send_keys('admin')  # TODO: Enter username and pw that already exist in DB
+        password_input.send_keys('admin')
 
         password_input.send_keys(Keys.RETURN)
 
