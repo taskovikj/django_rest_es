@@ -60,7 +60,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'branislav.taskovikj@gmail.com'
-EMAIL_HOST_PASSWORD = 'horvbpojzaerwpcq'
+EMAIL_HOST_PASSWORD = ''
 
 # if not DEBUG:
 #     # Production Database configuration
